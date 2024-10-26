@@ -28,7 +28,38 @@ if __name__ == '__main__':
     brain = Brain(**config)
     logger = Logger(brain, **config)
 
-    if not config["do_test"]:
+    if config["do_test"]:
+        checkpoint = logger.load_weights()
+        play = Play(config["env_name"], brain, checkpoint, config["quantization"])
+        if config["quantization"] != 'no':
+            print("FP32")
+        play.agent.print_size_of_policy()
+        print()
+        if 'static' in config["quantization"]:
+            if 'int8' in config["quantization"]:
+                # Calibrate first
+                play.max_episode = 1
+                play.evaluate()
+                convert(play.agent.current_policy, inplace=True)
+            elif 'float16' in config["quantization"]:   # calibration is not necessary
+                # # fx mode
+                # play.agent.current_policy = quantize_fx.convert_fx(play.agent.current_policy)
+                # eager mode
+                convert(play.agent.current_policy, inplace=True)
+            print()
+            print('Post Training Quantization: Convert done')
+        if 'int8' in config["quantization"]:
+            print("INT8")
+        elif 'float16' in config["quantization"]:
+            print("FP16")
+        if config["pruning"]:
+            play.agent.pruning(is_structured=True, part='RL_only', sparse_layers=False)
+            print('Post Training Pruning: Convert done')
+        play.agent.print_size_of_policy()
+        play.agent.print_time_of_policy()
+        play.max_episode = 100
+        play.evaluate()
+    else:
         if not config["train_from_scratch"]:
             checkpoint = logger.load_weights()
             brain.set_from_checkpoint(checkpoint, config["quantization"])
@@ -156,35 +187,3 @@ if __name__ == '__main__':
                                  training_logs,
                                  total_int_rewards[0].mean(),
                                  total_action_probs[0].max(-1).mean())
-
-    else:
-        checkpoint = logger.load_weights()
-        play = Play(config["env_name"], brain, checkpoint, config["quantization"])
-        if config["quantization"] != 'no':
-            print("FP32")
-        play.agent.print_size_of_policy()
-        print()
-        if 'static' in config["quantization"]:
-            if 'int8' in config["quantization"]:
-                # Calibrate first
-                play.max_episode = 1
-                play.evaluate()
-                convert(play.agent.current_policy, inplace=True)
-            elif 'float16' in config["quantization"]:   # calibration is not necessary
-                # # fx mode
-                # play.agent.current_policy = quantize_fx.convert_fx(play.agent.current_policy)
-                # eager mode
-                convert(play.agent.current_policy, inplace=True)
-            print()
-            print('Post Training Quantization: Convert done')
-        if 'int8' in config["quantization"]:
-            print("INT8")
-        elif 'float16' in config["quantization"]:
-            print("FP16")
-        if config["pruning"]:
-            play.agent.pruning(is_structured=True, part='RL_only', sparse_layers=False)
-            print('Post Training Pruning: Convert done')
-        play.agent.print_size_of_policy()
-        play.agent.print_time_of_policy()
-        play.max_episode = 100
-        play.evaluate()
