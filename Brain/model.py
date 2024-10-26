@@ -112,15 +112,6 @@ class PolicyModel(nn.Module, ABC):
             print(f"After pruning: out_channels{self.conv3.out_channels}")
 
             n_all_after_prune = sum(p.numel() for p in self.parameters())
-            # # pruning from torch.nn.utils
-            # parameters_to_prune = (
-            #     (self.fc1, 'weight'),
-            #     (self.fc2, 'weight'),
-            #     (self.extra_policy_fc, 'weight')
-            # )
-            # for layer, name in parameters_to_prune:
-            #     prune.ln_structured(layer, name, amount=0.1, n=1, dim=1)    # dim=0: output, dim=1: input
-            #     prune.remove(layer, name)
         else:
             # 1. Define the modules to prune
             parameters_to_prune = (

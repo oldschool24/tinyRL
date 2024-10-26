@@ -29,12 +29,12 @@ class Logger:
         self.running_last_10_ext_r = 0  # It is not correct but does not matter.
 
         if not self.config["do_test"] and self.config["train_from_scratch"]:
-            self.create_wights_folder()
+            self.create_weights_folder()
             self.log_params()
 
         self.exp_avg = lambda x, y: 0.9 * x + 0.1 * y if (y != 0).all() else y
 
-    def create_wights_folder(self):
+    def create_weights_folder(self):
         if not os.path.exists("Models"):
             os.mkdir("Models")
         os.mkdir("Models/" + self.log_dir)

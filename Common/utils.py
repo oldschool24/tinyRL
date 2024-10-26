@@ -32,8 +32,6 @@ def stack_states(stacked_frames, state, is_new_episode):
     return stacked_frames
 
 
-# Calculates if value function is a good predictor of the returns (ev > 1)
-# or if it's just worse than predicting nothing (ev =< 0)
 def explained_variance(ypred, y):
     """
     Computes fraction of variance that ypred explains about y.

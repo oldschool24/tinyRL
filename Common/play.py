@@ -60,6 +60,6 @@ class Play:
             # self.env.close()
             # self.VideoWriter.release()
             # cv2.destroyAllWindows()
+        print(f"Mean episode reward:{sum(mean_ep_reward) / len(mean_ep_reward):0.3f}")
         # data = np.array(data)
         # np.save('data', data)
-        print(f"Mean episode reward:{sum(mean_ep_reward) / len(mean_ep_reward):0.3f}")

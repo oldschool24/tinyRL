@@ -213,29 +213,6 @@ class Brain:
                 self.current_policy.qconfig = qconfig
                 torch.quantization.prepare(self.current_policy, inplace=True)
             elif 'float16' in quantization:
-                # # change float32 to float16
-                # self.current_policy = HalfPolicyModel(self.current_policy.state_shape, self.current_policy.n_actions)
-                # self.current_policy.load_state_dict(checkpoint["current_policy_state_dict"])
-                # self.current_policy.half()
-                # self.current_policy.to(torch.device('cuda'))
-
-                # # fx mode
-                # self.current_policy = FxQuantPolicyModel(self.current_policy.state_shape, self.current_policy.n_actions)
-                # self.current_policy.load_state_dict(checkpoint["current_policy_state_dict"])
-                # self.current_policy.to('cpu')
-                # self.current_policy.eval()
-                # qconfig = torch.quantization.float16_static_qconfig
-                # qconfig_dict = {"": qconfig}
-                # prepare_custom_config_dict = {
-                #     "non_traceable_module_name": ["non_traceable_submodule"],
-                #     "non_traceable_module_class": [NonTraceable]
-                # }
-                # self.current_policy = quantize_fx.prepare_fx(
-                #     self.current_policy,            # model to quantize
-                #     qconfig_dict,
-                #     prepare_custom_config_dict
-                # )
-
                 # eager mode
                 self.current_policy = QuantPolicyModel(self.current_policy.state_shape, self.current_policy.n_actions)
                 self.current_policy.load_state_dict(checkpoint["current_policy_state_dict"])
@@ -252,10 +229,7 @@ class Brain:
             prepare_binary_model(self.current_policy, bconfig,
                                  ignore_layers_name=['conv1', 'conv2', 'conv3', 'fc2', 'extra_value_fc',
                                                      'extra_policy_fc', 'policy', 'int_value', 'ext_value']) # 'fc1',
-            # self.binary_policy.load_state_dict(checkpoint["current_policy_state_dict"])
-            # prepare_binary_model(self.binary_policy, bconfig)
-            # prepare_binary_model(self.current_policy, bconfig,
-            #                      custom_config_layers_name={'conv1': BConfig(), 'conv2': BConfig(), 'conv3': BConfig()})
+
         self.predictor_model.load_state_dict(checkpoint["predictor_model_state_dict"])
         self.target_model.load_state_dict(checkpoint["target_model_state_dict"])
         for param in self.target_model.parameters():
@@ -267,8 +241,6 @@ class Brain:
         self.int_reward_rms.mean = checkpoint["int_reward_rms_mean"]
         self.int_reward_rms.var = checkpoint["int_reward_rms_var"]
         self.int_reward_rms.count = checkpoint["int_reward_rms_count"]
-        # self.pruned_policy = PolicyModel(self.config["state_shape"], self.config["n_actions"]).to(self.device)
-        # self.pruned_policy.load_state_dict(checkpoint["current_policy_state_dict"])
 
     def print_size_of_policy(self):
         torch.save(self.current_policy.state_dict(), "temp.p")
@@ -284,9 +256,6 @@ class Brain:
         measured_time = timeit.timeit(lambda: self.current_policy(data), number=number)
         avg_time = measured_time/number
         print("Time for the forward of policy:", avg_time)
-        # pruned_sparse = self.current_policy(data[0:5, :, :, :])
-        # pruned_dense = self.pruned_policy(data[0:5, :, :, :])
-        # print(torch.allclose(pruned_sparse[3], pruned_dense[3], atol=1e-07))
 
     def pruning(self, is_structured=False, part='RL_only', sparse_layers=False):
         """Prune policy model.
@@ -296,7 +265,6 @@ class Brain:
         :param sparse_layers: if set to ``True``, the weights will be in sparse format (default False)
         """
         self.current_policy.pruning(is_structured, part, sparse_layers)
-        # self.pruned_policy.pruning(part, sparse_layers=True)
 
     def binary_qat(self):
         """Set configuration of binary quantization-aware training."""
