@@ -91,12 +91,12 @@ class PolicyModel(nn.Module, ABC):
 
         return dist, int_value, ext_value, probs
 
-    def pruning(self, is_structured, part='RL_only', sparse_layers=False):
+    def pruning(self, is_structured, part, sparse_layers):
         """Prune policy model.
 
-        :param is_structured: if set to ``True``, structured pruning will be used (default False)
+        :param is_structured: if set to ``True``, structured pruning will be used
         :param part: a set of layers that need to be pruned ('RL_only' or 'all_net')
-        :param sparse_layers: if set to ``True``, the weights will be in sparse format (default False)
+        :param sparse_layers: if set to ``True``, the weights will be in sparse format
         """
         n_all = sum(p.numel() for p in self.parameters())
         if is_structured:
@@ -109,7 +109,7 @@ class PolicyModel(nn.Module, ABC):
             pruning_index = strategy(self.conv3.weight, amount=0.05)
             plan = dg.get_pruning_plan(self.conv3, tp.prune_conv, pruning_index)
             plan.exec()
-            print(f"After pruning: out_channels{self.conv3.out_channels}")
+            print(f"After pruning: out_channels={self.conv3.out_channels}")
 
             n_all_after_prune = sum(p.numel() for p in self.parameters())
         else:

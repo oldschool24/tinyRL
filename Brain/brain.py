@@ -260,7 +260,7 @@ class Brain:
     def pruning(self, is_structured, part, sparse_layers=False):
         """Prune policy model.
 
-        :param is_structured: if set to ``True``, structured pruning will be used (default False)
+        :param is_structured: if set to ``True``, structured pruning will be used
         :param part: a set of layers that need to be pruned ('RL_only' or 'all_net')
         :param sparse_layers: if set to ``True``, the weights will be in sparse format (default False)
         """
