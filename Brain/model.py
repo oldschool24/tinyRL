@@ -91,7 +91,7 @@ class PolicyModel(nn.Module, ABC):
 
         return dist, int_value, ext_value, probs
 
-    def pruning(self, is_structured=False, part='RL_only', sparse_layers=False):
+    def pruning(self, is_structured, part='RL_only', sparse_layers=False):
         """Prune policy model.
 
         :param is_structured: if set to ``True``, structured pruning will be used (default False)

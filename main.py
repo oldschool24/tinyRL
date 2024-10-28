@@ -53,7 +53,9 @@ if __name__ == '__main__':
         elif 'float16' in config["quantization"]:
             print("FP16")
         if config["pruning"]:
-            play.agent.pruning(is_structured=True, part='RL_only', sparse_layers=False)
+            play.agent.pruning(is_structured=config['is_structured'],
+                               part=config['network_part'],
+                               sparse_layers=False)
             print('Post Training Pruning: Convert done')
         play.agent.print_size_of_policy()
         play.agent.print_time_of_policy()

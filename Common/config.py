@@ -19,6 +19,10 @@ def get_params():
                         help="The flag determines type of quantization: no, static, dynamic")
     parser.add_argument("--pruning", action="store_true",
                         help="The flag determines whether to prune policy or not.")
+    parser.add_argument("--is_structured", action="store_true",
+                        help="The flag determines which type of pruning to use: structured or not.")
+    parser.add_argument("--network_part", default='RL_only', type=str,
+                        help="Which part of the network to prune.")
     parser.add_argument("--binary_qat", action="store_true",
                         help="The flag determines whether to do binary quantization-aware training or not.")
     parser.add_argument("--num_episodes", default=100, type=int,
