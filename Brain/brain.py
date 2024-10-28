@@ -252,7 +252,7 @@ class Brain:
 
         :param number: number of runs for averaging
         """
-        data = torch.tensor(np.load('data.npy')[0:100])
+        data = torch.tensor(np.load('data.npy')[:self.config['test_bs']])
         measured_time = timeit.timeit(lambda: self.current_policy(data), number=number)
         avg_time = measured_time/number
         print("Time for the forward of policy:", avg_time)

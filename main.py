@@ -38,7 +38,7 @@ if __name__ == '__main__':
         if 'static' in config["quantization"]:
             if 'int8' in config["quantization"]:
                 # Calibrate first
-                play.max_episode = 1
+                play.num_episodes = 1
                 play.evaluate()
                 convert(play.agent.current_policy, inplace=True)
             elif 'float16' in config["quantization"]:   # calibration is not necessary
@@ -57,7 +57,7 @@ if __name__ == '__main__':
             print('Post Training Pruning: Convert done')
         play.agent.print_size_of_policy()
         play.agent.print_time_of_policy()
-        play.max_episode = 100
+        play.num_episodes = config['num_episodes']
         play.evaluate()
     else:
         if not config["train_from_scratch"]:

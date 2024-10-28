@@ -21,6 +21,10 @@ def get_params():
                         help="The flag determines whether to prune policy or not.")
     parser.add_argument("--binary_qat", action="store_true",
                         help="The flag determines whether to do binary quantization-aware training or not.")
+    parser.add_argument("--num_episodes", default=100, type=int,
+                        help="The number of episodes to evaluate the resulting model.")
+    parser.add_argument("--test_bs", default=100, type=int,
+                        help="Batch size when measuring the time of the model forward pass.")
     parser_params = parser.parse_args()
 
     """ 

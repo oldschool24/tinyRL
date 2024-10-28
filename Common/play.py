@@ -6,9 +6,9 @@ import time
 
 
 class Play:
-    def __init__(self, env, agent, checkpoint, quantization, max_episode=1):
+    def __init__(self, env, agent, checkpoint, quantization, num_episodes=1):
         self.env = make_atari(env, 4500, sticky_action=False)
-        self.max_episode = max_episode
+        self.num_episodes = num_episodes
         self.agent = agent
         self.agent.set_from_checkpoint(checkpoint, quantization)
         self.agent.set_to_eval_mode()
@@ -20,7 +20,7 @@ class Play:
                                            self.env.observation_space.shape[1::-1])
 
     def evaluate(self):
-        """Evaluate agent in self.max_episode episodes.
+        """Evaluate agent in self.num_episodes episodes.
 
         Note 1: uncomment lines with var data if you want collect input data.
         Note 2: uncomment other lines if you want visualization.
@@ -30,7 +30,7 @@ class Play:
         obs, int_rewards = [], []
 
         # data = []
-        for ep in range(self.max_episode):
+        for ep in range(self.num_episodes):
             self.env.seed(ep)
             s = self.env.reset()
             stacked_states = stack_states(stacked_states, s, True)
