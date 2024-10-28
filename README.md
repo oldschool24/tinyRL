@@ -83,3 +83,31 @@ Unlike in the previous section, here the weights are actually removed.
 The best results can be seen in rows 1, 3, 4, and 5. 
 However, it's clear that the speed did not improve: 
 comparing rows 1 and 2 shows that the model with fewer parameters takes longer to compute.
+
+## How to Run:
+### Quantization
+To test different quantization types, use the following command:
+
+`python main.py --do_test --quantization <quantization_type> --num_episodes 100 --test_bs 100`
+
+Available Quantization Types:
+* dynamic_int8
+* dynamic_float16
+* static_int8
+* static_float16
+
+### Pruning
+To test pruning, you can run either of the following commands:
+
+Structured Pruning
+
+`python main.py --do_test --pruning --is_structured --num_episodes 100 --test_bs 100`
+
+Unstructured Pruning
+
+`python main.py --do_test --pruning --network_part <network_part> --num_episodes 100 --test_bs 100`
+
+Options for <network_part>:
+* RL_only: apply pruning to the reinforcement learning (RL) module only
+* all_net: apply pruning to the entire network
+
