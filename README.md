@@ -84,6 +84,17 @@ The best results can be seen in rows 1, 3, 4, and 5.
 However, it's clear that the speed did not improve: 
 comparing rows 1 and 2 shows that the model with fewer parameters takes longer to compute.
 
+## Requirements:
+The easiest way to set up all required dependencies is by creating an Anaconda environment:
+```
+conda create -n test_env python=3.7
+conda activate test_env
+pip install -r requirements.txt
+```
+To use Atari environments, you'll need to import the ROM files. 
+Follow the instructions provided [here](https://github.com/openai/atari-py?tab=readme-ov-file#roms) 
+to download and install the Atari ROMs.
+
 ## How to Run:
 ### Quantization
 To test different quantization types, use the following command:
@@ -110,4 +121,3 @@ Unstructured Pruning
 Options for <network_part>:
 * RL_only: apply pruning to the reinforcement learning (RL) module only
 * all_net: apply pruning to the entire network
-
