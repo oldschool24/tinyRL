@@ -2,18 +2,23 @@
 
 ## Project Description:
 This project explores the applicability of neural network optimization techniques for reinforcement learning tasks. 
+Specifically, it is based on the [implementation](https://github.com/alirezakazemipour/PPO-RND) 
+of "Exploration by Random Network Distillation" applied to the Atari game Montezuma's Revenge. 
 The methods used include post-training quantization, binary quantization-aware training, and pruning.
 
 ## Technologies:
-* Post-training quantization – torch.quantization (Eager Mode).
-* Binary quantization-aware training – https://github.com/1adrianb/binary-networks-pytorch.
-* Pruning – torch.nn.utils.prune, https://github.com/VainF/Torch-Pruning.
+* **Post-training quantization** – torch.quantization (Eager Mode).
+* **Binary quantization-aware training** – https://github.com/1adrianb/binary-networks-pytorch.
+* **Pruning** – torch.nn.utils.prune, https://github.com/VainF/Torch-Pruning.
 
 ## Results:
-The neural network architecture includes both convolutional and fully connected layers.
-The convolutional layers are grouped as the CNN part, while the fully connected layers make up the RL part.
+The neural network architecture includes both convolutional and fully connected layers:
+* **CNN Part**: Contains the convolutional layers.
+* **RL Part**: Contains the fully connected layers.
+
 The average reward per episode is determined by averaging the rewards across 100 episodes. 
-The computation time provided represents the average duration of 500 forward passes, each with a batch size of 100.
+The computation time provided represents the average duration of 500 forward passes, each with a batch size of 100, using observations stored in `data.npy`. 
+This file contains a pre-collected set of observations that serve as input data for consistent benchmarking during the forward pass measurements.
 
 ### Post-training quantization
 Parameters  | Data type | Quantization type | Mean episode reward | Time (s)  | Size (MB) |
@@ -101,7 +106,7 @@ To test different quantization types, use the following command:
 
 `python main.py --do_test --quantization <quantization_type> --num_episodes 100 --test_bs 100`
 
-Available Quantization Types:
+Options for <quantization_type>:
 * dynamic_int8
 * dynamic_float16
 * static_int8
@@ -110,11 +115,11 @@ Available Quantization Types:
 ### Pruning
 To test pruning, you can run either of the following commands:
 
-Structured Pruning
+**Structured Pruning**
 
 `python main.py --do_test --pruning --is_structured --num_episodes 100 --test_bs 100`
 
-Unstructured Pruning
+**Unstructured Pruning**
 
 `python main.py --do_test --pruning --network_part <network_part> --num_episodes 100 --test_bs 100`
 
